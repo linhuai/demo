@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" style="font-size: 50px;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>pre-load</title>
+  <style>
+  html, body, div {
+    padding: 0;
+    margin: 0;
+  }
+  .loading {
+    width: 100%;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    background: #ccc;
+    font-size: .3rem;
+  }
+  </style>
+</head>
+<body>
+  <div id="loading" class="loading">Loading</div>
+  <div class="container">
+    <img src="http://pic41.nipic.com/20140505/2531170_213651974000_2.jpg">
+    <img src="http://pic84.nipic.com/file/20151129/17961491_185523372000_2.jpg">
+    <img src="http://pic84.nipic.com/file/20151129/17961491_200636812000_2.jpg">
+  </div>
+  <script>
+    function loadImage (imageUrl) {
+      let image = new Image()
+      image.src = imageUrl
+      return new Promise((resolve, reject) => {
+        image.onload = function () {
+          resolve()
+        }
+        image.onerror = function (error) {
+          reject(error)
+        }
+      })
+    }
+    
+    function loadAllImage (images) {
+      let loadImages = images.map(imageUrl => {
+        return loadImage(imageUrl)
+      })
+      return Promise.all(loadImages)
+    }
+
+    let imgs = [
+      'http://pic41.nipic.com/20140505/2531170_213651974000_21.jpg',
+      'http://pic84.nipic.com/file/20151129/17961491_185523372000_2.jpg',
+      'http://pic84.nipic.com/file/20151129/17961491_200636812000_2.jpg'
+    ]
+    loadAllImage(imgs)
+      .then(res => {
+        let loading = document.getElementById('loading')
+        loading.style.display = 'none'
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  </script>
+</body>
+</html>
