@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Canvas 画一个小球</title>
+</head>
+
+<body>
+  <canvas></canvas>
+
+  <p>参考资料：</p>
+  <p><a href="https://www.zhangxinxu.com/wordpress/2017/03/canvas-2d-cool-affect-skills-technology/">https://www.zhangxinxu.com/wordpress/2017/03/canvas-2d-cool-affect-skills-technology/</a></p>
+  <script>
+    class Ball {
+      constructor(ctx, x, y, r, moveX, moveY) {
+        this.ctx = ctx
+        this.x = x
+        this.y = y
+        this.r = r
+        this.moveX = moveX
+        this.moveY = moveY
+      }
+      move() {
+        let { moveX, moveY } = this
+        this.x += moveX
+        this.y += moveY
+      }
+      draw() {
+        let { ctx, x, y, r } = this
+        ctx.beginPath()
+        ctx.fillStyle = 'white'
+        ctx.arc(x, y, r, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+
+    let canvas = document.querySelector('canvas'),
+      ctx = canvas.getContext('2d'),
+      canvasWidth = canvas.width,
+      canvasHeight = canvas.height
+
+    let balls = [];
+
+    (function () {
+      let x, 
+          y = canvasHeight / 2, 
+          r,
+          moveX, 
+          moveY = 0
+      for (let i = 0; i < 10; i++) {
+        x = Math.random() * canvasWidth
+        moveX = Math.random()
+        r = 5 + 5 * Math.random()
+        balls.push(new Ball(ctx, x, y, r, moveX, moveY))
+      }
+    })()
+
+    function render() {
+      ctx.fillStyle = 'black'
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+      balls.forEach(ball => {
+        ball.draw()
+        if (ball.x > canvasWidth) {
+          ball.x = -2 * ball.r
+        }
+        ball.move()
+      })
+      requestAnimationFrame(render)
+    }
+    render()
+  </script>
+
+</body>
+
+</html>
